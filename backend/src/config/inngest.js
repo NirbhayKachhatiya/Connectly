@@ -1,8 +1,9 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import { User } from "../models/users.model.js";
+import { upsertStreamUser,deleteStreamUser } from "./stream.js";
 
-// Create a client to send and receive events
+//creating a client to send and receive events
 export const inngest = new Inngest({ id: "connectly" });
 
 const addUser = inngest.createFunction(
@@ -18,7 +19,14 @@ const addUser = inngest.createFunction(
       image: image_url,
     };
 
-    await User.create(newUser);
+    await User.create(newUser); //adding user to mongodb
+
+    await upsertStreamUser({  //adding user to stream
+      id: id.toString(),
+      name: newUser.name,
+      image: image_url,
+    }); 
+
   }
 )
 const deleteUser = inngest.createFunction(
@@ -27,7 +35,8 @@ const deleteUser = inngest.createFunction(
   async ({ event }) => {
     await connectDB();
     const { id } = event.data;
-    await User.deleteOne({ clerkId: id });
+    await User.deleteOne({ clerkId: id }); //deleting user from mongodb
+    await deleteStreamUser(id.toString()); //deleting user from stream
   }
 );
 
