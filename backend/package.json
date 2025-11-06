@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch src/server.js",
-    "start": "node server.js"
+    "dev": "node --import ./instrument.mjs --watch src/server.js",
+    "start": "node --import ./instrument.mjs server.js"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +13,12 @@
   "type": "module",
   "dependencies": {
     "@clerk/express": "^1.7.4",
+    "@sentry/node": "^10.1.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "inngest": "^3.40.1",
-    "mongoose": "^8.16.5"
+    "mongoose": "^8.16.5",
+    "stream-chat": "^8.60.0"
   }
 }
